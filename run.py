@@ -4,7 +4,7 @@ import gspread
 # Import the "Credentials" class which is part of the "service_account"
 # function from the "google.oauth2" library
 from google.oauth2.service_account import Credentials
-from pprint import pprint
+# from pprint import pprint
 
 # Set the scope
 # The scope lists the API's that the program should acces in order to run
@@ -90,7 +90,13 @@ def calculate_surplus_data(sales_row):
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]
-    print(stock_row)
+
+    surplus_data = []
+    for stock, sales in zip(stock_row, sales_row):
+        surplus = int(stock) - sales
+        surplus_data.append(surplus)
+    
+    return surplus_data
 
 
 def main():
@@ -100,7 +106,8 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
-    calculate_surplus_data(sales_data)
+    new_surplus_data = calculate_surplus_data(sales_data)
+    print(new_surplus_data)
 
 
 print("Welcome to Love Sandwiches Data Automation")
